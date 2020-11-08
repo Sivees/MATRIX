@@ -17,8 +17,8 @@ foreach ($ou in $lab_ous) {
 
 
 New-ADGroup -Server $pdc_server -GroupCategory Security -GroupScope DomainLocal -Name 'LAB_MSQL_Servers' -Path 'OU=GROUPS,OU=LABORATORY,DC=laboratory,DC=int'
-New-ADComputer -Server $pdc_server -Name 'LAB-MSQL-010' -Path 'OU=SERVERS,OU=LABORATORY,DC=laboratory,DC=int'
-Add-ADGroupMember -Server $pdc_server -Identity 'LAB_MSQL_Servers' -Members 'LAB-MSQL-010$'
+New-ADComputer -Server $pdc_server -Name 'ALP-MSQL-010' -Path 'OU=SERVERS,OU=LABORATORY,DC=laboratory,DC=int'
+Add-ADGroupMember -Server $pdc_server -Identity 'LAB_MSQL_Servers' -Members 'ALP-MSQL-010$'
 
 # Wykreowanie klucza KDS z z utworzeniem konta serwisowego dla MSSQL
 # Add-KdsRootKey -EffectiveTime ((get-date).addhours(-10))
