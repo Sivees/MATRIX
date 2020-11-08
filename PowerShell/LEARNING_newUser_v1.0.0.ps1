@@ -1,13 +1,36 @@
 $pdc_server = (Get-ADDomain).PDCEmulator
+$domain_name = (Get-ADDomain).DNSRoot
+$ou_path = "OU=USERS,OU=LABORATORY,DC=laboratory,DC=int"
 
-$firstName = Read-Host -Prompt 'Imię'
-$lastName = Read-Host -Prompt 'Nazwisko'
-$login = Read-Host -Prompt 'Login'
+$first_name = Read-Host -Prompt "Imię"
+$last_name = Read-Host -Prompt "Nazwisko"
+$login = Read-Host -Prompt "Login"
+$user_password = Read-Host -AsSecureString -Prompt "Hasło"
+$expiration_date = Read-Host -Prompt "Data ważności (yyyy-mm-dd)"
+$account_expiration = ([datetime]::ParseExact($expiration_date, "yyyy-MM-dd", $null)).ToString()
 
+$user_name = "$first_name $last_name"
 
-New-ADUser -DisplayName:"Kajser Soze" -GivenName $firstName -Name:"OR-9 Kajser Soze" -Path:"OU=USERS,OU=LABORATORY,DC=laboratory,DC=int" -SamAccountName $login -Server$pdc_server -Surname $lastName -Type:"user" -UserPrincipalName:"ksoze@laboratory.int"
-# Set-ADAccountPassword -Identity:"CN=OR-9 Kajser Soze,OU=USERS,OU=LABORATORY,DC=laboratory,DC=int" -NewPassword:"System.Security.SecureString" -Reset:$true -Server$pdc_server
-Enable-ADAccount -Identity:"CN=OR-9 Kajser Soze,OU=USERS,OU=LABORATORY,DC=laboratory,DC=int" -Server$pdc_server
-Set-ADAccountExpiration -DateTime:"10/11/2030 00:00:00" -Identity:"CN=OR-9 Kajser Soze,OU=USERS,OU=LABORATORY,DC=laboratory,DC=int" -Server$pdc_server
-Set-ADAccountControl -AccountNotDelegated:$false -AllowReversiblePasswordEncryption:$false -CannotChangePassword:$false -DoesNotRequirePreAuth:$false -Identity:"CN=OR-9 Kajser Soze,OU=USERS,OU=LABORATORY,DC=laboratory,DC=int" -PasswordNeverExpires:$false -Server$pdc_server -UseDESKeyOnly:$false
-Set-ADUser -ChangePasswordAtLogon:$false -Identity:"CN=OR-9 Kajser Soze,OU=USERS,OU=LABORATORY,DC=laboratory,DC=int" -Server$pdc_server -SmartcardLogonRequired:$false
+$user_upn = "$login@$domain_name"
+
+New-ADUser -DisplayName $user_name `
+    -GivenName $first_name `
+    -Name $user_name `
+    -Path $ou_path `
+    -SamAccountName $login `
+    -Server $pdc_server `
+    -Surname $last_name `
+    -Type "user" `
+    -UserPrincipalName $user_upn
+Set-ADAccountPassword -Identity $login `
+    -NewPassword $user_password `
+    -Server $pdc_server
+Enable-ADAccount -Identity $login `
+    -Server $pdc_server
+Set-ADAccountExpiration -DateTime $account_expiration `
+    -Identity $login `
+    -Server $pdc_server
+Set-ADUser -ChangePasswordAtLogon $true `
+    -Identity $login `
+    -Server $pdc_server `
+    -SmartcardLogonRequired $false
