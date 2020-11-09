@@ -1,6 +1,6 @@
 $pdc_server = (Get-ADDomain).PDCEmulator
 $domain_name = (Get-ADDomain).DNSRoot
-$ou_path = "OU=USERS,OU=LABORATORY,DC=laboratory,DC=int"
+$ou_path = "OU=STANDARD,OU=USERS,OU=LABORATORY,DC=laboratory,DC=int"
 
 $first_name = Read-Host -Prompt "Imię"
 $last_name = Read-Host -Prompt "Nazwisko"
