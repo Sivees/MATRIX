@@ -46,4 +46,5 @@ Set-ADUser -ChangePasswordAtLogon $true `
     -Server $pdc_server `
     -SmartcardLogonRequired $false `
     -Description $user_description `
-    -EmailAddress $user_upn
+    -EmailAddress $user_upn `
+    -Country "PL"
