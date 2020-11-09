@@ -7,6 +7,7 @@ $last_name = Read-Host -Prompt "Nazwisko"
 $login = Read-Host -Prompt "Login"
 $user_password = Read-Host -AsSecureString -Prompt "Hasło"
 $expiration_date = Read-Host -Prompt "Data ważności (yyyy-mm-dd)"
+$user_description = Read-Host -Prompt "Opis konta"
 $account_expiration = ([datetime]::ParseExact($expiration_date, "yyyy-MM-dd", $null)).ToString()
 
 $user_name = "$first_name $last_name"
@@ -33,4 +34,5 @@ Set-ADAccountExpiration -DateTime $account_expiration `
 Set-ADUser -ChangePasswordAtLogon $true `
     -Identity $login `
     -Server $pdc_server `
-    -SmartcardLogonRequired $false
+    -SmartcardLogonRequired $false `
+    -Description $user_description
