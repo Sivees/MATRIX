@@ -1,50 +1,92 @@
-﻿Clear-Host
-$pdc_server = (Get-ADDomain).PDCEmulator
-$domain_name = (Get-ADDomain).DNSRoot
-$ou_path = "OU=STANDARD,OU=USERS,OU=LABORATORY,DC=laboratory,DC=int"
-
-$first_name = Read-Host -Prompt "Imię"
-$last_name = Read-Host -Prompt "Nazwisko"
-$login = Read-Host -Prompt "Login"
-$user_password = Read-Host -AsSecureString -Prompt "Hasło"
-$expiration_date = Read-Host -Prompt "Data ważności (yyyy-mm-dd)"
-try {
-    $account_expiration = ([datetime]::ParseExact($expiration_date, "yyyy-MM-dd", $null)).ToString()
+﻿function New-LabUser {
+    [CmdletBinding()]
+    param (
+        # Parameter help description
+        [Parameter()]
+        [string]
+        $Server=(Get-ADDomain).PDCEmulator,
+        # Parameter help description
+        [Parameter(Mandatory=$true)]
+        [string]
+        $Path,
+        # Parameter help description
+        [Parameter(Mandatory)]
+        [string]
+        $FirstName,
+        # Parameter help description
+        [Parameter(Mandatory)]
+        [string]
+        $LastName,
+        # Parameter help description
+        [Parameter(Mandatory)]
+        [string]
+        $SamAccountName,
+        # Parameter help description
+        [Parameter(Mandatory)]
+        [securestring]
+        $Password,
+        # Parameter help description
+        [Parameter(Mandatory)]
+        [string]
+        $AccountExpiration,
+        # Parameter help description
+        [Parameter(Mandatory)]
+        [string]
+        $Description,
+        # Parameter help description
+        [string]
+        $Country = "PL"
+    )
+    begin {
+        $Domain = (Get-ADDomain).DNSRoot
+    }
+    process {
+        try {
+            $account_expiration = ([datetime]::ParseExact($AccountExpiration, "yyyy-MM-dd", $null)).ToString()
+            $UserPrincipalName = "$SamAccountName@$Domain"
+            $FullName = "$FirstName $LastName"
+        }
+        catch [FormatException] {
+            Write-Host "Wrong DateTime format, it should be (yyyy-MM-dd)" -ForegroundColor Red
+            exit
+        }
+        catch {
+            Write-Output $_
+            exit
+        }
+        try {
+            New-ADUser -DisplayName $FullName `
+                -GivenName $FirstName `
+                -Name $FullName `
+                -Path $Path `
+                -SamAccountName $SamAccountName `
+                -Server $Server `
+                -Surname $LastName `
+                -Type "user" `
+                -UserPrincipalName $UserPrincipalName
+            Set-ADAccountPassword -Identity $SamAccountName `
+                -NewPassword $Password `
+                -Server $Server
+            Enable-ADAccount -Identity $SamAccountName `
+                -Server $Server
+            Set-ADAccountExpiration -DateTime $account_expiration `
+                -Identity $SamAccountName `
+                -Server $Server
+            Set-ADUser -ChangePasswordAtLogon $true `
+                -Identity $SamAccountName `
+                -Server $Server `
+                -SmartcardLogonRequired $false `
+                -Description $Description `
+                -EmailAddress $UserPrincipalName `
+                -Country $Country
+        }
+        catch {
+            Write-Output $_
+        }
+    }
+    end {
+        Write-Output "Thats all"
+    }
 }
-catch [FormatException] {
-    Write-Host "Wrong DateTime format, it should be (yyyy-MM-dd)" -ForegroundColor Red
-    exit
-}
-catch {
-    Write-Output $_
-    exit
-}
-$user_description = Read-Host -Prompt "Opis konta"
-$user_name = "$first_name $last_name"
 
-$user_upn = "$login@$domain_name"
 
-New-ADUser -DisplayName $user_name `
-    -GivenName $first_name `
-    -Name $user_name `
-    -Path $ou_path `
-    -SamAccountName $login `
-    -Server $pdc_server `
-    -Surname $last_name `
-    -Type "user" `
-    -UserPrincipalName $user_upn
-Set-ADAccountPassword -Identity $login `
-    -NewPassword $user_password `
-    -Server $pdc_server
-Enable-ADAccount -Identity $login `
-    -Server $pdc_server
-Set-ADAccountExpiration -DateTime $account_expiration `
-    -Identity $login `
-    -Server $pdc_server
-Set-ADUser -ChangePasswordAtLogon $true `
-    -Identity $login `
-    -Server $pdc_server `
-    -SmartcardLogonRequired $false `
-    -Description $user_description `
-    -EmailAddress $user_upn `
-    -Country "PL"
