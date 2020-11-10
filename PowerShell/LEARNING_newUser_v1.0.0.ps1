@@ -1,9 +1,5 @@
 ﻿function New-LabUser {
     <#
-    .SYNOPSIS
-
-        Addong new user in Laboratory domain.
-
     .DESCRIPTION
 
     Adds new user .
