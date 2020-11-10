@@ -1,9 +1,13 @@
 ﻿function New-LabUser {
     <#
+    .SYNOPSIS
+
+    Adds a new User to Laboratort Environment.
+
     .DESCRIPTION
 
-    Adds new user .
-    Takes any strings for the file name or extension.
+    Adds a new User to Laboratort Environment.
+    Takes custom attributes and implementing required fields to ADUser object.
 
     .PARAMETER Name
     Specifies the file name.
