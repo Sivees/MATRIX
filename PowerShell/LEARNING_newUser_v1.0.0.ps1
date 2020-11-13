@@ -106,8 +106,8 @@
             Set-ADAccountPassword -Identity $SamAccountName `
                 -NewPassword $Password `
                 -Server $Server
-            Enable-ADAccount -Identity $SamAccountName `
-                -Server $Server
+            # Enable-ADAccount -Identity $SamAccountName `
+            #     -Server $Server
             Set-ADAccountExpiration -DateTime $account_expiration `
                 -Identity $SamAccountName `
                 -Server $Server
