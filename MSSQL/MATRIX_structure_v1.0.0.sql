@@ -47,7 +47,7 @@ CREATE TABLE tbl_person(
 	id_person uniqueidentifier NOT NULL DEFAULT (newsequentialid()) PRIMARY KEY,
 	id_nation uniqueidentifier NOT NULL REFERENCES tbl_nation(id_nation),
 	id_sex uniqueidentifier NOT NULL REFERENCES tbl_sex(id_sex),
-	id_military_rank uniqueidentifier NOT NULL REFERENCES tbl_military_rank(id_military_rank),
+	id_military_rank uniqueidentifier REFERENCES tbl_military_rank(id_military_rank),
 	first_name nvarchar(128) NOT NULL,
 	last_name nvarchar (128) NOT NULL,
 	pesel nvarchar (11),
