@@ -4,6 +4,7 @@ GO
 USE MATRIX
 GO
 
+-- tables
 CREATE TABLE tbl_nation(
 	id_nation uniqueidentifier NOT NULL DEFAULT (newsequentialid()) PRIMARY KEY,
 	polish_name nvarchar(64) NOT NULL,
@@ -13,7 +14,7 @@ CREATE TABLE tbl_nation(
 	numeric_code smallint NOT NULL,
 	iso_code nvarchar(32) NOT NULL,
 	is_active bit NOT NULL DEFAULT 1,
-	creation_time datetime NOT NULL DEFAULT (getdate()),
+	creation_time datetime NOT NULL DEFAULT (getdate())
 )
 
 CREATE TABLE tbl_sex(
@@ -21,7 +22,7 @@ CREATE TABLE tbl_sex(
 	full_name nvarchar(64) NULL,
 	symbol nvarchar(1) NULL,
 	is_active bit NOT NULL DEFAULT 1,
-	creation_time datetime NOT NULL DEFAULT (getdate()),
+	creation_time datetime NOT NULL DEFAULT (getdate())
 )
 
 
@@ -29,7 +30,7 @@ CREATE TABLE tbl_nato_rank(
 	id_nato_rank uniqueidentifier NOT NULL DEFAULT (newsequentialid()) PRIMARY KEY,
 	short_name nvarchar(8) NOT NULL,
 	is_active bit NOT NULL DEFAULT 1,
-	creation_time datetime NOT NULL DEFAULT (getdate()),
+	creation_time datetime NOT NULL DEFAULT (getdate())
 )
 
 CREATE TABLE tbl_military_rank(
@@ -40,7 +41,7 @@ CREATE TABLE tbl_military_rank(
 	is_polish bit NOT NULL,
 	hierarchy smallint NOT NULL,
 	is_active bit NOT NULL DEFAULT 1,
-	creation_time datetime NOT NULL DEFAULT (getdate()),
+	creation_time datetime NOT NULL DEFAULT (getdate())
 )
 
 CREATE TABLE tbl_person(
@@ -53,14 +54,14 @@ CREATE TABLE tbl_person(
 	pesel nvarchar (11),
 	date_of_birth date,
 	is_active bit NOT NULL DEFAULT 1,
-	creation_time datetime NOT NULL DEFAULT (getdate()),
+	creation_time datetime NOT NULL DEFAULT (getdate())
 )
 
 CREATE TABLE tbl_identity_document_type(
 	id_identity_document_type uniqueidentifier NOT NULL DEFAULT (newsequentialid()) PRIMARY KEY,
 	full_name nvarchar(64) NULL,
 	is_active bit NOT NULL DEFAULT 1,
-	creation_time datetime NOT NULL DEFAULT (getdate()),
+	creation_time datetime NOT NULL DEFAULT (getdate())
 )
 
 CREATE TABLE tbl_identity_document(
@@ -72,7 +73,7 @@ CREATE TABLE tbl_identity_document(
 	expiration_date date,
 	issuer nvarchar(128) NOT NULL, 
 	is_active bit NOT NULL DEFAULT 1,
-	creation_time datetime NOT NULL DEFAULT (getdate()),
+	creation_time datetime NOT NULL DEFAULT (getdate())
 )
 
 CREATE TABLE tbl_security_state(
@@ -80,7 +81,7 @@ CREATE TABLE tbl_security_state(
 	full_name nvarchar(64) NOT NULL,
 	short_name nvarchar(16) NOT NULL,
 	is_active bit NOT NULL DEFAULT 1,
-	creation_time datetime NOT NULL DEFAULT (getdate()),
+	creation_time datetime NOT NULL DEFAULT (getdate())
 )
 
 CREATE TABLE tbl_security_classification(
@@ -90,25 +91,50 @@ CREATE TABLE tbl_security_classification(
 	short_name nvarchar(16) NOT NULL,
 	hierarchy smallint NOT NULL,
 	is_active bit NOT NULL DEFAULT 1,
-	creation_time datetime NOT NULL DEFAULT (getdate()),
+	creation_time datetime NOT NULL DEFAULT (getdate())
 )
 
 CREATE TABLE tbl_security_clearance_type(
 	id_security_clearance_type uniqueidentifier NOT NULL DEFAULT (newsequentialid()) PRIMARY KEY,
 	full_name nvarchar(64) NULL,
 	is_active bit NOT NULL DEFAULT 1,
-	creation_time datetime NOT NULL DEFAULT (getdate()),
+	creation_time datetime NOT NULL DEFAULT (getdate())
 )
 
 CREATE TABLE tbl_security_clearance(
 	id_security_clearance uniqueidentifier NOT NULL DEFAULT (newsequentialid()) PRIMARY KEY,
 	id_person uniqueidentifier NOT NULL REFERENCES tbl_person(id_person),
 	id_security_clearance_type uniqueidentifier NOT NULL REFERENCES tbl_security_clearance_type(id_security_clearance_type),
-	id_security_classification uniqueidentifier NOT NULL REFERENCES tbl_security_classification(id_security_classification),
 	serial_number nvarchar(32) NOT NULL,
 	date_of_issue date NOT NULL,
-	expiration_date date,
 	issuer nvarchar(128) NOT NULL,
 	is_active bit NOT NULL DEFAULT 1,
-	creation_time datetime NOT NULL DEFAULT (getdate()),
+	creation_time datetime NOT NULL DEFAULT (getdate())
 )
+
+CREATE TABLE tbl_clearance_classification(
+	id_clearance_classification uniqueidentifier NOT NULL DEFAULT (newsequentialid()) PRIMARY KEY,
+	id_security_clearance uniqueidentifier NOT NULL REFERENCES tbl_security_clearance(id_security_clearance),
+	id_security_classification uniqueidentifier NOT NULL REFERENCES tbl_security_classification(id_security_classification),
+	expiration_date date,
+	is_active bit NOT NULL DEFAULT 1,
+	creation_time datetime NOT NULL DEFAULT (getdate())
+)
+GO
+
+--views
+CREATE VIEW viw_get_newest_identity_document
+AS
+WITH cte_identity_document AS(
+	SELECT *,
+		ROW_NUMBER() OVER(PARTITION BY id_person, id_identity_document_type ORDER BY expiration_date DESC) AS row_no
+	FROM tbl_identity_document)
+SELECT id_identity_document,
+	id_identity_document_type,
+	id_person, serial_number,
+	date_of_issue, expiration_date,
+	issuer, is_active,
+	creation_time
+FROM cte_identity_document
+WHERE row_no = 1
+GO

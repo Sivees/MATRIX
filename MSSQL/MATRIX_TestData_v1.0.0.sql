@@ -1,6 +1,7 @@
 ﻿USE MATRIX
 GO
 
+--insert persons
 INSERT INTO tbl_person (id_nation, id_sex, id_military_rank, first_name, last_name, pesel, date_of_birth)
 VALUES (
 	'B3F817B5-F216-EB11-995E-000C295890EE', --nation
@@ -48,3 +49,57 @@ VALUES (
 	CONVERT(date, '1920-05-04')
 )
 GO
+
+--insert identity documents
+INSERT INTO tbl_identity_document (id_person, id_identity_document_type, serial_number, date_of_issue, expiration_date, issuer)
+VALUES (
+	'C47DD798-B629-EB11-9965-000C2907CAFC', --person
+	'C8C28E99-F716-EB11-995E-000C295890EE', --id type
+	'127/2010',
+	CONVERT(date, '2000-05-04'),
+	CONVERT(date, '2010-05-04'),
+	'Prezydent m. Warszawa'
+)
+
+INSERT INTO tbl_identity_document (id_person, id_identity_document_type, serial_number, date_of_issue, expiration_date, issuer)
+VALUES (
+	'C47DD798-B629-EB11-9965-000C2907CAFC', --person
+	'C8C28E99-F716-EB11-995E-000C295890EE', --id type
+	'127/2010',
+	CONVERT(date, '2005-05-04'),
+	CONVERT(date, '2015-05-04'),
+	'Prezydent m. Warszawa'
+)
+
+INSERT INTO tbl_identity_document (id_person, id_identity_document_type, serial_number, date_of_issue, expiration_date, issuer)
+VALUES (
+	'C77DD798-B629-EB11-9965-000C2907CAFC', --person
+	'C8C28E99-F716-EB11-995E-000C295890EE', --id type
+	'3/1920',
+	CONVERT(date, '1920-05-04'),
+	CONVERT(date, '1930-05-04'),
+	'Prezydent m. Warszawa'
+)
+
+INSERT INTO tbl_identity_document (id_person, id_identity_document_type, serial_number, date_of_issue, expiration_date, issuer)
+VALUES (
+	'C77DD798-B629-EB11-9965-000C2907CAFC', --person
+	'C8C28E99-F716-EB11-995E-000C295890EE', --id type
+	'18/1925',
+	CONVERT(date, '1925-05-04'),
+	CONVERT(date, '1935-05-04'),
+	'Prezydent m. Warszawa'
+)
+
+INSERT INTO tbl_identity_document (id_person, id_identity_document_type, serial_number, date_of_issue, expiration_date, issuer)
+VALUES (
+	'C77DD798-B629-EB11-9965-000C2907CAFC', --person
+	'C7C28E99-F716-EB11-995E-000C295890EE', --id type
+	'12/1926',
+	CONVERT(date, '1926-05-04'),
+	CONVERT(date, '1936-05-04'),
+	'Prezydent m. Warszawa'
+)
+
+--insert security clearances
+INSERT INTO tbl_security_clearance (id_person, id_security_clearance_type, )
