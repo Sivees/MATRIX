@@ -66,7 +66,7 @@ CREATE TABLE tbl_identity_document_type(
 
 CREATE TABLE tbl_identity_document(
 	id_identity_document uniqueidentifier NOT NULL DEFAULT (newsequentialid()) PRIMARY KEY,
-	id_person uniqueidentifier NOT NULL REFERENCES tbl_person(id_person),
+	id_person uniqueidentifier NOT NULL REFERENCES tbl_person(id_person) ON DELETE CASCADE,
 	id_identity_document_type uniqueidentifier NOT NULL REFERENCES tbl_identity_document_type(id_identity_document_type),
 	serial_number nvarchar(32) NOT NULL,
 	date_of_issue date NOT NULL,
@@ -103,7 +103,7 @@ CREATE TABLE tbl_security_clearance_type(
 
 CREATE TABLE tbl_security_clearance(
 	id_security_clearance uniqueidentifier NOT NULL DEFAULT (newsequentialid()) PRIMARY KEY,
-	id_person uniqueidentifier NOT NULL REFERENCES tbl_person(id_person),
+	id_person uniqueidentifier NOT NULL REFERENCES tbl_person(id_person) ON DELETE CASCADE,
 	id_security_clearance_type uniqueidentifier NOT NULL REFERENCES tbl_security_clearance_type(id_security_clearance_type),
 	serial_number nvarchar(32) NOT NULL,
 	date_of_issue date NOT NULL,
@@ -114,7 +114,7 @@ CREATE TABLE tbl_security_clearance(
 
 CREATE TABLE tbl_clearance_classification(
 	id_clearance_classification uniqueidentifier NOT NULL DEFAULT (newsequentialid()) PRIMARY KEY,
-	id_security_clearance uniqueidentifier NOT NULL REFERENCES tbl_security_clearance(id_security_clearance),
+	id_security_clearance uniqueidentifier NOT NULL REFERENCES tbl_security_clearance(id_security_clearance) ON DELETE CASCADE,
 	id_security_classification uniqueidentifier NOT NULL REFERENCES tbl_security_classification(id_security_classification),
 	expiration_date date,
 	is_active bit NOT NULL DEFAULT 1,
@@ -136,5 +136,34 @@ SELECT id_identity_document,
 	issuer, is_active,
 	creation_time
 FROM cte_identity_document
+WHERE row_no = 1
+GO
+
+CREATE VIEW viw_get_newest_security_clearance
+AS
+WITH cte_security_clearance AS (
+	SELECT tcc.id_security_clearance,
+		tsc.id_person,
+		tsc.id_security_clearance_type,
+		tsc.serial_number,
+		tsc.date_of_issue,
+		tsc.issuer,
+		tcc.id_clearance_classification,
+		tcc.id_security_classification,
+		tcc.expiration_date,
+		ROW_NUMBER() OVER(PARTITION BY tsc.id_person, tsc.id_security_clearance_type, tscl.id_security_state, tcc.id_security_classification ORDER BY tcc.expiration_date DESC) AS row_no
+	FROM tbl_security_clearance AS tsc
+		INNER JOIN tbl_clearance_classification AS tcc ON tsc.id_security_clearance = tcc.id_security_clearance
+		INNER JOIN tbl_security_classification AS tscl ON tcc.id_security_classification = tscl.id_security_classification
+		INNER JOIN tbl_person AS tp ON tsc.id_person = tp.id_person
+)
+SELECT id_security_clearance,
+	id_person,
+	id_security_clearance_type,
+	serial_number, date_of_issue,
+	issuer, id_clearance_classification,
+	id_security_classification,
+	expiration_date
+FROM cte_security_clearance
 WHERE row_no = 1
 GO
