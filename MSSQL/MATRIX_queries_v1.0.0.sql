@@ -1,7 +1,7 @@
 ﻿USE MATRIX
 GO
 
-SELECT CONCAT_WS(' ', tmr.short_name, tp.first_name, tp.last_name) AS person,
+SELECT CONCAT_WS(' ', tmr.short_name, tp.first_name, UPPER(tp.last_name)) AS person,
 	tsct.full_name AS ClearanceType,
 	tss.full_name AS SecurityState,
 	tsc.full_name AS SecurityClassification,
