@@ -196,3 +196,34 @@ VALUES (
 	'88B3561F-FE16-EB11-995E-000C295890EE',
 	(SELECT DATEADD(DAY, -1, DATEADD(YEAR, 5, date_of_issue)) FROM tbl_security_clearance WHERE serial_number = '76/2006')
 )
+
+---
+INSERT INTO tbl_security_clearance (id_person, id_security_clearance_type, serial_number, date_of_issue, issuer)
+VALUES (
+	(SELECT id_person FROM tbl_person WHERE pesel = '00000000003'), --person
+	'EF75A0CD-FE16-EB11-995E-000C295890EE',
+	'1/1928',
+	CONVERT(date, '1928-02-25'),
+	N'Agencja Bezpieczeństwa Wewnętrznego'
+)
+
+INSERT INTO tbl_clearance_classification (id_security_clearance, id_security_classification, expiration_date)
+VALUES (
+	(SELECT id_security_clearance FROM tbl_security_clearance WHERE serial_number = '1/1928'),
+	'88B3561F-FE16-EB11-995E-000C295890EE',
+	(SELECT DATEADD(DAY, -1, DATEADD(YEAR, 5, date_of_issue)) FROM tbl_security_clearance WHERE serial_number = '1/1928')
+)
+
+INSERT INTO tbl_clearance_classification (id_security_clearance, id_security_classification, expiration_date)
+VALUES (
+	(SELECT id_security_clearance FROM tbl_security_clearance WHERE serial_number = '1/1928'),
+	'87B3561F-FE16-EB11-995E-000C295890EE',
+	(SELECT DATEADD(DAY, -1, DATEADD(YEAR, 7, date_of_issue)) FROM tbl_security_clearance WHERE serial_number = '1/1928')
+)
+
+INSERT INTO tbl_clearance_classification (id_security_clearance, id_security_classification, expiration_date)
+VALUES (
+	(SELECT id_security_clearance FROM tbl_security_clearance WHERE serial_number = '1/1928'),
+	'86B3561F-FE16-EB11-995E-000C295890EE',
+	(SELECT DATEADD(DAY, -1, DATEADD(YEAR, 10, date_of_issue)) FROM tbl_security_clearance WHERE serial_number = '1/1928')
+)

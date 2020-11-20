@@ -150,6 +150,7 @@ WITH cte_security_clearance AS (
 		tsc.issuer,
 		tcc.id_clearance_classification,
 		tcc.id_security_classification,
+		tscl.id_security_state,
 		tcc.expiration_date,
 		ROW_NUMBER() OVER(PARTITION BY tsc.id_person, tsc.id_security_clearance_type, tscl.id_security_state, tcc.id_security_classification ORDER BY tcc.expiration_date DESC) AS row_no
 	FROM tbl_security_clearance AS tsc
@@ -161,8 +162,10 @@ SELECT id_security_clearance,
 	id_person,
 	id_security_clearance_type,
 	serial_number, date_of_issue,
-	issuer, id_clearance_classification,
+	issuer,
+	id_clearance_classification,
 	id_security_classification,
+	id_security_state,
 	expiration_date
 FROM cte_security_clearance
 WHERE row_no = 1
