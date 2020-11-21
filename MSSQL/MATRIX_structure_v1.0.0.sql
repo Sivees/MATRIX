@@ -122,6 +122,13 @@ CREATE TABLE tbl_clearance_classification(
 )
 GO
 
+--indexes
+CREATE INDEX idx_nation_polish_name ON tbl_nation(polish_name);
+CREATE INDEX idx_military_rank_hierarchy ON tbl_military_rank(hierarchy);
+CREATE INDEX idx_person_last_name ON tbl_person(last_name);
+CREATE INDEX idx_person_pesel ON tbl_person(pesel);
+CREATE UNIQUE INDEX idx_person_pesel_unique ON tbl_person(pesel);
+
 --views
 CREATE VIEW viw_get_newest_identity_document
 AS

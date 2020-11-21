@@ -67,7 +67,7 @@ INSERT INTO tbl_identity_document (id_person, id_identity_document_type, serial_
 VALUES (
 	(SELECT id_person FROM tbl_person WHERE pesel = '00000000002'), --person
 	'C8C28E99-F716-EB11-995E-000C295890EE', --id type
-	'127/2010',
+	'GYT653423',
 	CONVERT(date, '2000-05-04'),
 	CONVERT(date, '2010-05-04'),
 	N'Prezydent m. Warszawa'
@@ -77,7 +77,7 @@ INSERT INTO tbl_identity_document (id_person, id_identity_document_type, serial_
 VALUES (
 	(SELECT id_person FROM tbl_person WHERE pesel = '00000000002'), --person
 	'C8C28E99-F716-EB11-995E-000C295890EE', --id type
-	'127/2010',
+	'IKU674512',
 	CONVERT(date, '2005-05-04'),
 	CONVERT(date, '2015-05-04'),
 	N'Prezydent m. Warszawa'
@@ -87,7 +87,7 @@ INSERT INTO tbl_identity_document (id_person, id_identity_document_type, serial_
 VALUES (
 	(SELECT id_person FROM tbl_person WHERE pesel = '00000000003'), --person
 	'C8C28E99-F716-EB11-995E-000C295890EE', --id type
-	'3/1920',
+	'ASD984523',
 	CONVERT(date, '1920-05-04'),
 	CONVERT(date, '1930-05-04'),
 	N'Prezydent m. Warszawa'
@@ -97,7 +97,7 @@ INSERT INTO tbl_identity_document (id_person, id_identity_document_type, serial_
 VALUES (
 	(SELECT id_person FROM tbl_person WHERE pesel = '00000000003'), --person
 	'C8C28E99-F716-EB11-995E-000C295890EE', --id type
-	'18/1925',
+	'OLI543423',
 	CONVERT(date, '1925-05-04'),
 	CONVERT(date, '1935-05-04'),
 	N'Prezydent m. Warszawa'
@@ -107,7 +107,7 @@ INSERT INTO tbl_identity_document (id_person, id_identity_document_type, serial_
 VALUES (
 	(SELECT id_person FROM tbl_person WHERE pesel = '00000000003'), --person
 	'C7C28E99-F716-EB11-995E-000C295890EE', --id type
-	'12/1926',
+	'WES673765',
 	CONVERT(date, '1926-05-04'),
 	CONVERT(date, '1936-05-04'),
 	N'Prezydent m. Warszawa'
@@ -179,7 +179,7 @@ VALUES (
 INSERT INTO tbl_security_clearance (id_person, id_security_clearance_type, serial_number, date_of_issue, issuer)
 VALUES (
 	(SELECT id_person FROM tbl_person WHERE pesel = '00000000002'), --person
-	'8DB3561F-FE16-EB11-995E-000C295890EE',
+	'EF75A0CD-FE16-EB11-995E-000C295890EE',
 	'765/2019',
 	CONVERT(date, '2001-01-02'),
 	N'Agencja Bezpieczeństwa Wewnętrznego'
