@@ -6,7 +6,7 @@ INSERT INTO tbl_person (id_nation, id_sex, id_military_rank, first_name, last_na
 VALUES (
 	'B3F817B5-F216-EB11-995E-000C295890EE', --nation
 	'E153D5C5-FB16-EB11-995E-000C295890EE', --sex
-	'47E7336E-FA16-EB11-995E-000C295890EE', --military rank
+	'42E7336E-FA16-EB11-995E-000C295890EE', --military rank
 	N'Kajser',
 	N'Soze',
 	'00000000001',
@@ -42,11 +42,23 @@ INSERT INTO tbl_person (id_nation, id_sex, id_military_rank, first_name, last_na
 VALUES (
 	'AAF817B5-F216-EB11-995E-000C295890EE', --nation
 	'E153D5C5-FB16-EB11-995E-000C295890EE', --sex
-	'66E7336E-FA16-EB11-995E-000C295890EE', --military rank
+	'58E7336E-FA16-EB11-995E-000C295890EE', --military rank
 	N'Józef',
 	N'Piłsudski',
 	'00000000003',
 	CONVERT(date, '1920-05-04')
+)
+GO
+
+INSERT INTO tbl_person (id_nation, id_sex, id_military_rank, first_name, last_name, pesel, date_of_birth)
+VALUES (
+	'AAF817B5-F216-EB11-995E-000C295890EE', --nation
+	'E153D5C5-FB16-EB11-995E-000C295890EE', --sex
+	'4AE7336E-FA16-EB11-995E-000C295890EE', --military rank
+	N'Karol',
+	N'Świerczewski',
+	'00000000004',
+	CONVERT(date, '1901-01-02')
 )
 GO
 
@@ -104,7 +116,7 @@ VALUES (
 --insert security clearances
 INSERT INTO tbl_security_clearance (id_person, id_security_clearance_type, serial_number, date_of_issue, issuer)
 VALUES (
-	(SELECT id_person FROM tbl_person WHERE pesel = '00000000002'), --person
+	(SELECT id_person FROM tbl_person WHERE pesel = '00000000001'), --person
 	'EF75A0CD-FE16-EB11-995E-000C295890EE',
 	'78/2015',
 	CONVERT(date, '2005-05-04'),
@@ -167,7 +179,7 @@ VALUES (
 INSERT INTO tbl_security_clearance (id_person, id_security_clearance_type, serial_number, date_of_issue, issuer)
 VALUES (
 	(SELECT id_person FROM tbl_person WHERE pesel = '00000000002'), --person
-	'E3844ED6-FE16-EB11-995E-000C295890EE',
+	'8DB3561F-FE16-EB11-995E-000C295890EE',
 	'765/2019',
 	CONVERT(date, '2001-01-02'),
 	N'Agencja Bezpieczeństwa Wewnętrznego'
@@ -185,16 +197,16 @@ INSERT INTO tbl_security_clearance (id_person, id_security_clearance_type, seria
 VALUES (
 	(SELECT id_person FROM tbl_person WHERE pesel = '00000000002'), --person
 	'E3844ED6-FE16-EB11-995E-000C295890EE',
-	'76/2006',
+	'76/NATO/2006',
 	CONVERT(date, '2006-01-02'),
 	N'Agencja Bezpieczeństwa Wewnętrznego'
 )
 
 INSERT INTO tbl_clearance_classification (id_security_clearance, id_security_classification, expiration_date)
 VALUES (
-	(SELECT id_security_clearance FROM tbl_security_clearance WHERE serial_number = '76/2006'),
-	'88B3561F-FE16-EB11-995E-000C295890EE',
-	(SELECT DATEADD(DAY, -1, DATEADD(YEAR, 5, date_of_issue)) FROM tbl_security_clearance WHERE serial_number = '76/2006')
+	(SELECT id_security_clearance FROM tbl_security_clearance WHERE serial_number = '76/NATO/2006'),
+	'8DB3561F-FE16-EB11-995E-000C295890EE',
+	(SELECT DATEADD(DAY, -1, DATEADD(YEAR, 5, date_of_issue)) FROM tbl_security_clearance WHERE serial_number = '76/NATO/2006')
 )
 
 ---
@@ -226,4 +238,52 @@ VALUES (
 	(SELECT id_security_clearance FROM tbl_security_clearance WHERE serial_number = '1/1928'),
 	'86B3561F-FE16-EB11-995E-000C295890EE',
 	(SELECT DATEADD(DAY, -1, DATEADD(YEAR, 10, date_of_issue)) FROM tbl_security_clearance WHERE serial_number = '1/1928')
+)
+
+---
+INSERT INTO tbl_security_clearance (id_person, id_security_clearance_type, serial_number, date_of_issue, issuer)
+VALUES (
+	(SELECT id_person FROM tbl_person WHERE pesel = '00000000003'), --person
+	'EF75A0CD-FE16-EB11-995E-000C295890EE',
+	'23/NATO/1930',
+	CONVERT(date, '1930-12-05'),
+	N'Służba Kontrwywiadu Wojskowego'
+)
+
+INSERT INTO tbl_clearance_classification (id_security_clearance, id_security_classification, expiration_date)
+VALUES (
+	(SELECT id_security_clearance FROM tbl_security_clearance WHERE serial_number = '23/NATO/1930'),
+	'8DB3561F-FE16-EB11-995E-000C295890EE',
+	(SELECT DATEADD(DAY, -1, DATEADD(YEAR, 5, date_of_issue)) FROM tbl_security_clearance WHERE serial_number = '23/NATO/1930')
+)
+
+INSERT INTO tbl_clearance_classification (id_security_clearance, id_security_classification, expiration_date)
+VALUES (
+	(SELECT id_security_clearance FROM tbl_security_clearance WHERE serial_number = '23/NATO/1930'),
+	'8CB3561F-FE16-EB11-995E-000C295890EE',
+	(SELECT DATEADD(DAY, -1, DATEADD(YEAR, 7, date_of_issue)) FROM tbl_security_clearance WHERE serial_number = '23/NATO/1930')
+)
+
+INSERT INTO tbl_clearance_classification (id_security_clearance, id_security_classification, expiration_date)
+VALUES (
+	(SELECT id_security_clearance FROM tbl_security_clearance WHERE serial_number = '23/NATO/1930'),
+	'8BB3561F-FE16-EB11-995E-000C295890EE',
+	(SELECT DATEADD(DAY, -1, DATEADD(YEAR, 10, date_of_issue)) FROM tbl_security_clearance WHERE serial_number = '23/NATO/1930')
+)
+
+---
+INSERT INTO tbl_security_clearance (id_person, id_security_clearance_type, serial_number, date_of_issue, issuer)
+VALUES (
+	(SELECT id_person FROM tbl_person WHERE pesel = '00000000003'), --person
+	'E3844ED6-FE16-EB11-995E-000C295890EE',
+	'178/NATO/1930',
+	CONVERT(date, '1930-01-02'),
+	N'Agencja Bezpieczeństwa Wewnętrznego'
+)
+
+INSERT INTO tbl_clearance_classification (id_security_clearance, id_security_classification, expiration_date)
+VALUES (
+	(SELECT id_security_clearance FROM tbl_security_clearance WHERE serial_number = '178/NATO/1930'),
+	'8DB3561F-FE16-EB11-995E-000C295890EE',
+	(SELECT DATEADD(DAY, -1, DATEADD(YEAR, 5, date_of_issue)) FROM tbl_security_clearance WHERE serial_number = '178/NATO/1930')
 )
