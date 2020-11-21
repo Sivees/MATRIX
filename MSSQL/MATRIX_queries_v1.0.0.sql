@@ -42,3 +42,16 @@ FROM viw_get_newest_security_clearance AS vgnsc
 --WHERE vgnsc.expiration_date <= DATEADD(YEAR, 6, GETDATE())
 ORDER BY tp.last_name, tsct.id_security_clearance_type, tss.id_security_state, tsc.hierarchy DESC
 GO
+
+SELECT CONCAT_WS(' ', tnr.short_name, tp.first_name, UPPER(tp.last_name)) AS Person,
+	tidt.full_name AS IDType,
+	vgnid.serial_number AS IDSerialNumber,
+	vgnid.issuer AS IDIssuer,
+	vgnid.date_of_issue AS IDDateOfIssue,
+	vgnid.expiration_date AS IDExpirationDate
+FROM viw_get_newest_identity_document AS vgnid
+	LEFT JOIN tbl_person AS tp ON vgnid.id_person = tp.id_person
+	LEFT JOIN tbl_military_rank AS tmr ON tp.id_military_rank = tmr.id_military_rank
+	LEFT JOIN tbl_nato_rank AS tnr ON tmr.id_nato_rank = tnr.id_nato_rank
+	LEFT JOIN tbl_identity_document_type AS tidt ON vgnid.id_identity_document_type = tidt.id_identity_document_type
+ORDER BY tp.last_name, vgnid.id_identity_document_type

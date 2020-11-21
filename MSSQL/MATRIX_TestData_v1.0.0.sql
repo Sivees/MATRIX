@@ -113,6 +113,16 @@ VALUES (
 	N'Prezydent m. Warszawa'
 )
 
+INSERT INTO tbl_identity_document (id_person, id_identity_document_type, serial_number, date_of_issue, expiration_date, issuer)
+VALUES (
+	(SELECT id_person FROM tbl_person WHERE pesel = '00000000003'), --person
+	'C7C28E99-F716-EB11-995E-000C295890EE', --id type
+	'HUA752456',
+	CONVERT(date, '1936-08-04'),
+	CONVERT(date, '1946-08-04'),
+	N'Prezydent m. Warszawa'
+)
+
 --insert security clearances
 INSERT INTO tbl_security_clearance (id_person, id_security_clearance_type, serial_number, date_of_issue, issuer)
 VALUES (
